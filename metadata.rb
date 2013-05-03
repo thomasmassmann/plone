@@ -10,7 +10,7 @@ version          '0.1.0'
   supports os
 end
 
-%w{ python }.each do |cb|
+%w{ git python }.each do |cb|
   depends cb
 end
 
