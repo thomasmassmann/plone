@@ -1,0 +1,17 @@
+# Permanent redirect (301) für: www.<%= @domain.domain_name %>
+server {
+    listen 80;
+    server_name www.<%= @domain.domain_name %>;
+    rewrite (^/.*) http://<%= @domain.domain_name %>$1 permanent;
+}
+
+# Zope for: <%= @domain.domain_name %>
+server {
+    listen 80;
+    server_name  <%= @domain.domain_name %>;
+    access_log  <%= node['nginx']['log_dir'] %>/<%= @domain.domain_name %>.access.log;
+
+    location / {
+        proxy_pass http://<%= @domain.backend_ip %>:<%= @domain.backend_port %>/VirtualHostBase/http/<%= @domain.domain_name %>:80/<%= @domain.plone_site %>/VirtualHostRoot/;
+    }
+}
