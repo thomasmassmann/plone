@@ -22,12 +22,12 @@ action :enable do
  Chef::Log.debug "Adding #{new_resource.domain_name}."
 
   template "#{node['nginx']['dir']}/sites-available/#{new_resource.domain_name}.conf" do
-    source "nginx_plone.conf.erb"
-    cookbook "plone"
+    source new_resource.template
+    cookbook new_resource.cookbook
     owner "root"
     group "root"
     mode "644"
-    variables :domain => new_resource
+    variables :vhost => new_resource
   end
 
   nginx_site "#{new_resource.domain_name}.conf" do
