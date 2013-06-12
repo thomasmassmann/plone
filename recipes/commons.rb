@@ -24,3 +24,17 @@ include_recipe "python::default"
 package "libshadow-ruby1.8" do
   action :install
 end
+
+# Add Plone group.
+group node[:plone][:group] do
+  action :create
+end
+
+# Add Plone user.
+user node[:plone][:user] do
+  action :create
+  comment "Plone User"
+  gid node[:plone][:group]
+  home node[:plone][:home]
+  supports :manage_home => true
+end
