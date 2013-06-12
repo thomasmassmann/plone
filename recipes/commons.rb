@@ -39,3 +39,10 @@ user node[:plone][:user] do
   shell "/bin/bash"
   supports :manage_home => true
 end
+
+# Create Plone virtualenv.
+python_virtualenv "#{node[:plone][:home]}/venv" do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  action :create
+end
