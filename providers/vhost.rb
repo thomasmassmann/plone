@@ -21,7 +21,7 @@
 action :enable do
  Chef::Log.debug "Adding #{new_resource.domain_name}."
 
-  template "#{node['nginx']['dir']}/sites-available/#{new_resource.domain_name}.conf" do
+  template "#{node[:nginx][:dir]}/sites-available/#{new_resource.domain_name}.conf" do
     source new_resource.template
     cookbook new_resource.cookbook
     owner "root"
@@ -49,7 +49,7 @@ action :remove do
   Chef::Log.debug "Removing #{new_resource.domain_name}."
 
   disable_config
-  file "#{node['nginx']['dir']}/sites-available/#{new_resource.domain_name}.conf" do
+  file "#{node[:nginx][:dir]}/sites-available/#{new_resource.domain_name}.conf" do
     action :delete
   end
 
