@@ -21,8 +21,6 @@
 default[:plone][:user] = "plone"
 default[:plone][:group] = "plone"
 default[:plone][:home] = "/home/#{node[:plone][:user]}"
-default[:plone][:app_name] = "Plone"
-default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
 
 # ZEO Server settings.
 default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
@@ -34,6 +32,8 @@ default[:plone][:backups][:enabled] = true
 default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"
 
 # Plone settings.
+default[:plone][:app_name] = "Plone"
+default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
 default[:plone][:version] = "4.3"
 default[:plone][:newest] = true
 default[:plone][:prefer_final] = true

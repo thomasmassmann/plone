@@ -21,7 +21,7 @@
 include_recipe "plone::commons"
 
 # Add ZEO-Server directory.
-directory "#{node[:plone][:zeo][:dir]}" do
+directory node[:plone][:zeo][:dir] do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 00755
@@ -37,4 +37,42 @@ end
     action :create
     recursive true
   end
+end
+
+# ZEO-Server buildout bootstrap.
+cookbook_file "#{node[:plone][:zeo][:dir]}/bootstrap.py" do
+  source "bootstrap.py"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+end
+
+# ZEO-Server buildout configuration.
+template "#{node[:plone][:zeo][:dir]}/base.cfg" do
+  source "base.cfg.erb"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  variables({
+  })
+end
+
+# ZEO-Server buildout configuration.
+template "#{node[:plone][:zeo][:dir]}/buildout.cfg" do
+  source "buildout_zeo.cfg.erb"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  variables({
+  })
+  notifies :run, "execute[buildout]", :immediately
+end
+
+# Run ZEO-Server buildout.
+execute "buildout" do
+  cwd node[:plone][:zeo][:dir]
+  command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
+  user node[:plone][:user]
+  action :nothing
+  # notifies :restart, "supervisor_service[zeoserver]", :immediately
 end
