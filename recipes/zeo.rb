@@ -19,3 +19,22 @@
 
 # Install dependencies, prepare common directories.
 include_recipe "plone::commons"
+
+# Add ZEO-Server directory.
+directory "#{node[:plone][:zeo][:dir]}" do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+end
+
+# Add ZEO-Server buildout directories.
+%w{ eggs downloads extends-cache }.each do |dir|
+  directory "#{node[:plone][:zeo][:dir]}/#{dir}" do
+    owner node[:plone][:user]
+    group node[:plone][:group]
+    mode 00755
+    action :create
+    recursive true
+  end
+end
