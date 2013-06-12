@@ -19,12 +19,3 @@
 
 # Install dependencies, prepare common directories.
 include_recipe "plone::commons"
-
-deploy_revision "/opt/zeoserver" do
-  repo "https://github.com/propertyshelf/buildout_zeoserver.git"
-  revision "master"
-  create_dirs_before_symlink []
-  symlink_before_migrate({})
-  symlinks({})
-  action :force_deploy
-end
