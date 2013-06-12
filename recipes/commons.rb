@@ -19,7 +19,6 @@
 
 # Install and configure python, python-dev, pip and virtualenv.
 include_recipe "python::default"
-include_recipe "git"
 
 # This package is currently necessary for the user resource (password functions).
 package "libshadow-ruby1.8" do
