@@ -54,8 +54,31 @@ template "#{node[:plone][:zeo][:dir]}/base.cfg" do
   group node[:plone][:group]
   mode 0644
   variables({
+    :environment_vars => node[:plone][:environmen_vars],
+    :extensions => node[:plone][:extensions],
+    :find_links => node[:plone][:find_links],
+    :newest => node[:plone][:newest],
+    :prefer_final => node[:plone][:prefer_final],
+    :unzip => node[:plone][:unzip]
   })
+  notifies :run, "execute[buildout]"
 end
+
+zeo_ip = begin
+  if node[:plone][:zeo][:custom_ip]
+    node[:plone][:zeo][:custom_ip]
+  elsif node.attribute?("cloud")
+    case node[:cloud][:provider]
+    when "rackspace", "vagrant"
+      node[:cloud][:local_ipv4]
+    else
+      node[:ipaddress]
+    end
+  else
+    node[:ipaddress]
+  end
+end
+node.set[:plone][:zeo][:ip] = zeo_ip
 
 # ZEO-Server buildout configuration.
 template "#{node[:plone][:zeo][:dir]}/buildout.cfg" do
@@ -64,8 +87,11 @@ template "#{node[:plone][:zeo][:dir]}/buildout.cfg" do
   group node[:plone][:group]
   mode 0644
   variables({
+    :version => node[:plone][:version],
+    :zeo_ip => zeo_ip,
+    :zeo_port => node[:plone][:zeo][:port]
   })
-  notifies :run, "execute[buildout]", :immediately
+  notifies :run, "execute[buildout]"
 end
 
 # Run ZEO-Server buildout.

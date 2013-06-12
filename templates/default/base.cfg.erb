@@ -14,30 +14,30 @@ extends-cache = extends-cache
 
 # Don't download new things unless needed to satisfy dependencies.
 # Override this on the command line with the "-n" flag.
-newest = false
+newest = <%= @newest %>
 
 # Pick final releases over newer development releases.
-prefer-final = true
+prefer-final = <%= @prefer_final %>
 
 versions = versions
 
 # Add additional egg download sources here. dist.plone.org contains archives
 # of Plone packages.
 find-links =
-    http://dist.plone.org
-    http://download.zope.org/ppix/
-    http://download.zope.org/distribution/
-    http://effbot.org/downloads
+    <% @find_links.each do |link| -%>
+    <%= link %>
+    <% end -%>
 
 # Unzip all eggs for easier debugging
-unzip = true
+unzip = <%= @unzip %>
 
 # buildout.dumppickedversions notifies you of versions picked by buildout that
 # were not specifically pinned.
 # buildout.sanitycheck makes sure you're not running buildout as root.
 extensions =
-    buildout.dumppickedversions
-    buildout.sanitycheck
+    <% @extensions.each do |extension| -%>
+    <%= extension %>
+    <% end -%>
 
 
 ############################################
@@ -77,11 +77,9 @@ backups-dir=${buildout:var-dir}
 #      pseudo-random value is used to seed the hashes of str, bytes and datetime
 #      objects.
 environment-vars =
-    zope_i18n_compile_mo_files true
-    PYTHON_EGG_CACHE ${buildout:directory}/var/.python-eggs
-    PYTHONHASHSEED random
-    #    TZ US/Eastern
-    #    zope_i18n_allowed_languages en es de fr
+    <% @environment_vars.each do |item| -%>
+    <%= item %>
+    <% end -%>
 
 
 [backup]

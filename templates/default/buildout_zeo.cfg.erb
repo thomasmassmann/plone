@@ -14,7 +14,7 @@
 #
 extends =
     base.cfg
-    http://dist.plone.org/release/4.3/versions.cfg
+    http://dist.plone.org/release/<%= @version %>/versions.cfg
 
 eggs =
 
@@ -26,7 +26,7 @@ parts =
 [zeoserver]
 <= zeoserver_base
 recipe = plone.recipe.zeoserver
-zeo-address = 127.0.0.1:8100
+zeo-address = <%= @zeo_ip %>:<%= @zeo_port %>
 
 
 ############################################
