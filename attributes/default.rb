@@ -27,6 +27,10 @@ default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
 default[:plone][:zeo][:custom_ip] = nil
 default[:plone][:zeo][:port] = "8100"
 default[:plone][:zeo][:role] = "plone_zeo"
+default[:plone][:zeo][:versions] = [
+    "collective.recipe.backup = 2.10",
+    "plone.recipe.precompiler = 0.6"
+]
 
 # Backup settings.
 default[:plone][:backups][:enabled] = true

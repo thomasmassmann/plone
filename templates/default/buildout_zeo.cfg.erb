@@ -41,3 +41,6 @@ zeo-address = <%= @zeo_ip %>:<%= @zeo_port %>
 # config files.
 #
 [versions]
+<% @versions.each do |version| -%>
+<%= version %>
+<% end -%>
