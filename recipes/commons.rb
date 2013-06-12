@@ -36,5 +36,6 @@ user node[:plone][:user] do
   comment "Plone User"
   gid node[:plone][:group]
   home node[:plone][:home]
+  shell "/bin/bash"
   supports :manage_home => true
 end
