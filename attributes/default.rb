@@ -20,8 +20,9 @@
 # General settings.
 default[:plone][:user] = "plone"
 default[:plone][:group] = "plone"
+default[:plone][:home] = "/home/#{node[:plone][:user]}"
 default[:plone][:app_name] = "Plone"
-default[:plone][:home] = "/home/#{node[:plone][:user]}/#{node[:plone][:app_name]}"
+default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
 
 # ZEO Server settings.
 default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
