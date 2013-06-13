@@ -82,8 +82,8 @@ template "#{node[:plone][:app_home]}/buildout.cfg" do
   group node[:plone][:group]
   mode 0644
   variables({
-    :client_ip => "127.0.0.1",
-    :client_port => "8080",
+    :client_ip => node[:cloud][:local_ipv4] || node[:ipaddress],
+    :client_port => node[:plone][:port],
     :eggs => node[:plone][:eggs],
     :version => node[:plone][:version],
     :versions => node[:plone][:zeo][:versions],

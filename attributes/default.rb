@@ -40,6 +40,7 @@ default[:plone][:zeo][:versions] = [
 ]
 
 # Plone settings.
+default[:plone][:port] = "8080"
 default[:plone][:app_name] = "Plone"
 default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
 default[:plone][:version] = "4.3"
