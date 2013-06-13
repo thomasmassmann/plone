@@ -77,7 +77,7 @@ template "#{node[:plone][:zeo][:dir]}/base.cfg" do
     :unzip => node[:plone][:unzip],
     :user => node[:plone][:user]
   })
-  notifies :run, "execute[buildout]"
+  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_zeoserver]"
 end
 
 zeo_ip = begin
@@ -108,16 +108,16 @@ template "#{node[:plone][:zeo][:dir]}/buildout.cfg" do
     :zeo_ip => zeo_ip,
     :zeo_port => node[:plone][:zeo][:port]
   })
-  notifies :run, "execute[buildout]"
+  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_zeoserver]"
 end
 
 # Run ZEO-Server buildout.
-execute "buildout" do
+execute "buildout_#{node[:plone][:app_name]}_zeoserver" do
   cwd node[:plone][:zeo][:dir]
   command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
   user node[:plone][:user]
   action :nothing
-  # notifies :restart, "supervisor_service[zeoserver]", :immediately
+  notifies :restart, "service[#{node[:plone][:app_name]}_zeoserver]"
 end
 
 # ZEO-Server daily backup.
