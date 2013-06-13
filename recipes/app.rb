@@ -19,3 +19,10 @@
 
 # Install dependencies, prepare common directories.
 include_recipe "plone::commons"
+
+# Install additional packages.
+%w{ libjpeg-dev libxslt-dev }.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
