@@ -115,3 +115,31 @@ execute "buildout_#{node[:plone][:app_name]}_client" do
   action :nothing
   # notifies :restart, "supervisor_service[zeoserver]", :immediately
 end
+
+case node[:platform]
+when "debian", "ubuntu"
+  template "/etc/init.d/#{node[:plone][:app_name]}_client" do
+    source "plone.init.erb"
+    owner "root"
+    group "root"
+    mode "755"
+    variables({
+      :home => node[:plone][:app_home],
+      :name => "#{node[:plone][:app_name]}_client"
+    })
+  end
+
+  template "/etc/default/#{node[:plone][:app_name]}_client" do
+    source "plone.default.erb"
+    owner "root"
+    group "root"
+    mode "644"
+    variables({
+      :name => "#{node[:plone][:app_name]}_client"
+    })
+  end
+
+  service "#{node[:plone][:app_name]}_client" do
+    action [:enable, :start]
+  end
+end
