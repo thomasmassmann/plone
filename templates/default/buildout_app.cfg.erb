@@ -73,7 +73,9 @@ zcml =
 [client]
 <= client_base
 recipe = plone.recipe.zope2instance
-zeo-address = <%= @zeo_ip %>:<%= @zeo_port %>
+<% @zeo_servers.each do |zeo_server| -%>
+zeo-address = <%= zeo_server[:plone][:zeo][:ip] %>:<%= zeo_server[:plone][:zeo][:port] %>
+<% end -%>
 http-address = <%= @client_ip %>:<%= @client_port %>
 
 

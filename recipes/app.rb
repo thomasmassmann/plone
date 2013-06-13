@@ -75,6 +75,20 @@ template "#{node[:plone][:app_home]}/base.cfg" do
   notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
 end
 
+# Search for ZEO Servers.
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  zeo_servers = Array.new
+  zeo_servers << node
+else
+  zeo_servers = search(:node, "role:#{node[:plone][:zeo][:role]} AND chef_environment:#{node.chef_environment}") || []
+  if zeo_servers.empty?
+    Chef::Log.info("No nodes returned from search, using this node so buildout.cfg has data.")
+    zeo_servers = Array.new
+    zeo_servers << node
+  end
+end
+
 # ZEO-Client buildout configuration.
 template "#{node[:plone][:app_home]}/buildout.cfg" do
   source "buildout_app.cfg.erb"
@@ -88,8 +102,7 @@ template "#{node[:plone][:app_home]}/buildout.cfg" do
     :version => node[:plone][:version],
     :versions => node[:plone][:zeo][:versions],
     :zcml => node[:plone][:zcml],
-    :zeo_ip => "127.0.0.1",
-    :zeo_port => node[:plone][:zeo][:port],
+    :zeo_servers => zeo_servers.uniq,
   })
   notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
 end

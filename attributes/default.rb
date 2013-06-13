@@ -26,7 +26,6 @@ default[:plone][:home] = "/home/#{node[:plone][:user]}"
 default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
 default[:plone][:zeo][:custom_ip] = nil
 default[:plone][:zeo][:port] = "8100"
-default[:plone][:zeo][:role] = "plone_zeo"
 default[:plone][:zeo][:versions] = [
     "Cheetah = 2.2.1",
     "Products.DocFinderTab = 1.0.5",
@@ -38,6 +37,7 @@ default[:plone][:zeo][:versions] = [
     "zopeskel.dexterity = 1.5.0",
     "zopeskel.diazotheme = 1.0",
 ]
+default[:plone][:zeo][:role] = "plone_zeo"
 
 # Plone settings.
 default[:plone][:port] = "8080"
