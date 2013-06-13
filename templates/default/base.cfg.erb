@@ -55,8 +55,7 @@ var-dir=${buildout:directory}/var
 # Sets the target directory for the bin/backup and bin/snapshotbackup
 # commands. Default is inside this project's var directory, but ideally
 # this should be on a separate volume or backup server.
-#
-backups-dir=${buildout:var-dir}
+backups-dir=<%= @backups_dir %>
 
 
 ###############################################################################
@@ -82,15 +81,6 @@ environment-vars =
     <% end -%>
 
 
-[backup]
-# This recipe builds the backup, restore and snapshotbackup commands.
-# For options see http://pypi.python.org/pypi/collective.recipe.backup
-recipe = collective.recipe.backup
-location = ${buildout:backups-dir}/backups
-blobbackuplocation = ${buildout:backups-dir}/blobstoragebackups
-snapshotlocation = ${buildout:backups-dir}/snapshotbackups
-blobsnapshotlocation = ${buildout:backups-dir}/blobstoragesnapshots
-datafs = ${buildout:var-dir}/filestorage/Data.fs
 blob-storage = ${buildout:var-dir}/blobstorage
 
 
@@ -110,6 +100,16 @@ recipe = zc.recipe.egg
 eggs = ZODB3
 scripts = repozo
 
+[backup]
+# This recipe builds the backup, restore and snapshotbackup commands.
+# For options see http://pypi.python.org/pypi/collective.recipe.backup
+recipe = collective.recipe.backup
+location = ${buildout:backups-dir}/backups
+blobbackuplocation = ${buildout:backups-dir}/blobstoragebackups
+snapshotlocation = ${buildout:backups-dir}/snapshotbackups
+blobsnapshotlocation = ${buildout:backups-dir}/blobstoragesnapshots
+datafs = ${buildout:var-dir}/filestorage/Data.fs
+blob-storage = ${buildout:var-dir}/blobstorage
 
 [zopepy]
 # Installs a zopepy python interpreter that runs with your full Zope

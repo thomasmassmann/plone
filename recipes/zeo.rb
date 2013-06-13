@@ -28,6 +28,15 @@ directory node[:plone][:zeo][:dir] do
   action :create
 end
 
+# Add Backups directory.
+directory node[:plone][:backups][:directory] do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+  recursive true
+end
+
 # Add ZEO-Server buildout directories.
 %w{ eggs downloads extends-cache }.each do |dir|
   directory "#{node[:plone][:zeo][:dir]}/#{dir}" do
@@ -54,6 +63,7 @@ template "#{node[:plone][:zeo][:dir]}/base.cfg" do
   group node[:plone][:group]
   mode 0644
   variables({
+    :backups_dir => node[:plone][:backups][:directory],
     :environment_vars => node[:plone][:environmen_vars],
     :extensions => node[:plone][:extensions],
     :find_links => node[:plone][:find_links],

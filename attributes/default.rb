@@ -32,10 +32,6 @@ default[:plone][:zeo][:versions] = [
     "plone.recipe.precompiler = 0.6"
 ]
 
-# Backup settings.
-default[:plone][:backups][:enabled] = true
-default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"
-
 # Plone settings.
 default[:plone][:app_name] = "Plone"
 default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
@@ -62,3 +58,7 @@ default[:plone][:environmen_vars] = [
 ]
 default[:plone][:eggs] = []
 default[:plone][:zcml] = []
+# Backup settings.
+# default[:plone][:backups][:enabled] = true
+default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"
+
