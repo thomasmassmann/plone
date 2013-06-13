@@ -69,7 +69,8 @@ template "#{node[:plone][:zeo][:dir]}/base.cfg" do
     :find_links => node[:plone][:find_links],
     :newest => node[:plone][:newest],
     :prefer_final => node[:plone][:prefer_final],
-    :unzip => node[:plone][:unzip]
+    :unzip => node[:plone][:unzip],
+    :user => node[:plone][:user]
   })
   notifies :run, "execute[buildout]"
 end
@@ -98,6 +99,7 @@ template "#{node[:plone][:zeo][:dir]}/buildout.cfg" do
   mode 0644
   variables({
     :version => node[:plone][:version],
+    :versions => node[:plone][:zeo][:versions],
     :zeo_ip => zeo_ip,
     :zeo_port => node[:plone][:zeo][:port]
   })

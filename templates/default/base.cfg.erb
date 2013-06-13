@@ -12,15 +12,45 @@ eggs-directory = eggs
 download-cache = downloads
 extends-cache = extends-cache
 
+versions = versions
+
+###############################################################################
+# User configuration
+# -----------------------------------------------------------------------------
+# If you try to start Zope as root, it will change user id to run as
+# the effective user specified here. This user id must own the var directory
+# of your buildout.
+effective-user = <%= @user %>
+# This user will own the rest of the installation, and should be used to
+# run buildout.
+buildout-user = <%= @user %>
+
+
+###############################################################################
+# Package actuality
+# -----------------------------------------------------------------------------
 # Don't download new things unless needed to satisfy dependencies.
 # Override this on the command line with the "-n" flag.
 newest = <%= @newest %>
 
+
+###############################################################################
+# Package status
+# -----------------------------------------------------------------------------
 # Pick final releases over newer development releases.
 prefer-final = <%= @prefer_final %>
 
-versions = versions
 
+###############################################################################
+# Package unzipping
+# -----------------------------------------------------------------------------
+# Unzip all eggs for easier debugging
+unzip = <%= @unzip %>
+
+
+###############################################################################
+# Download links for packages
+# -----------------------------------------------------------------------------
 # Add additional egg download sources here. dist.plone.org contains archives
 # of Plone packages.
 find-links =
@@ -28,9 +58,10 @@ find-links =
     <%= link %>
     <% end -%>
 
-# Unzip all eggs for easier debugging
-unzip = <%= @unzip %>
 
+###############################################################################
+# Extensions
+# -----------------------------------------------------------------------------
 # buildout.dumppickedversions notifies you of versions picked by buildout that
 # were not specifically pinned.
 # buildout.sanitycheck makes sure you're not running buildout as root.
@@ -40,18 +71,17 @@ extensions =
     <% end -%>
 
 
-############################################
+###############################################################################
 # var Directory
-# -------------
+# -----------------------------------------------------------------------------
 # Sets the target directory for the "var" components of the install such as
 # database and log files.
-#
 var-dir=${buildout:directory}/var
 
 
-############################################
+###############################################################################
 # Backup Directory
-# ----------------
+# -----------------------------------------------------------------------------
 # Sets the target directory for the bin/backup and bin/snapshotbackup
 # commands. Default is inside this project's var directory, but ideally
 # this should be on a separate volume or backup server.
@@ -81,18 +111,80 @@ environment-vars =
     <% end -%>
 
 
+###############################################################################
+# ZEO Server
+# ----------
+# Use this section to install and configure a Zope Enterprise Objects server.
+# For options see http://pypi.python.org/pypi/plone.recipe.zeoserver
+[zeoserver_base]
+# If we try to start as root, Zope will switch to the user below
+effective-user = ${buildout:effective-user}
+# Set storage
+var = ${buildout:var-dir}
 blob-storage = ${buildout:var-dir}/blobstorage
+# Put the log, pid and socket files in var/zeoserver
+zeo-log     = ${buildout:var-dir}/zeoserver/zeoserver.log
+pid-file    = ${buildout:var-dir}/zeoserver/zeoserver.pid
+socket-name = ${buildout:var-dir}/zeoserver/zeo.zdsock
 
+[client_base]
+# Use this section to install and configure a ZEO client
+# instance.
+# For options see http://pypi.python.org/pypi/plone.recipe.zope2instance
 
-[precompiler]
-# This recipe is used in production installs to compile .py and .po files so
-# that the daemon doesn't try to do it.
-# For options see http://pypi.python.org/pypi/plone.recipe.precompiler
-recipe = plone.recipe.precompiler
-eggs = ${buildout:eggs}
-compile-mo-files = true
-extra-paths = ${buildout:directory}/products
+# The line below sets only the initial password. It will not change an
+# existing password.
+user = ${buildout:user}
+# if we try to start as root, Zope will switch to the user below
+effective-user = ${buildout:effective-user}
+# change debug-mode to "on" to run in development mode.
+# starting in foreground (fg) mode is a better way to do this.
+debug-mode = off
+# change verbose-security to "on" for detailed security
+# errors while developing
+verbose-security = ${buildout:verbose-security}
+# change deprecation-warnings to "on" to get log warnings
+# for deprecated usages.
+deprecation-warnings = ${buildout:deprecation-warnings}
 
+# base locations
+var = ${buildout:var-dir}
+blob-storage = ${:var}/blobstorage
+
+# Comment the next four lines out if you don't need
+# automatic log rotation for event and access logs.
+event-log-max-size = 5 MB
+event-log-old-files = 5
+access-log-max-size = 20 MB
+access-log-old-files = 5
+
+# If you want Zope to know about any additional eggs, list them here.
+# e.g. eggs = ${buildout:eggs} my.package
+eggs =
+    ${buildout:eggs}
+
+# If you want to register ZCML slugs for any packages, list them here.
+# e.g. zcml = my.package my.other.package
+zcml = ${buildout:zcml}
+
+products = ${buildout:directory}/products
+
+# You may also control the environment variables for the instance.
+environment-vars = ${buildout:environment-vars}
+
+zeo-client = true
+# shared blobs are much faster if we're on the same server.
+# if not, turn it off.
+shared-blob = on
+
+# defer early binding to port; may improve load balancer behavior on restarts
+http-fast-listen = off
+
+# Put the log, pid, lock files in var/client1
+event-log = ${buildout:var-dir}/${:_buildout_section_name_}/event.log
+z2-log    = ${buildout:var-dir}/${:_buildout_section_name_}/Z2.log
+pid-file  = ${buildout:var-dir}/${:_buildout_section_name_}/${:_buildout_section_name_}.pid
+lock-file = ${buildout:var-dir}/${:_buildout_section_name_}/${:_buildout_section_name_}.lock
 
 [repozo]
 # This recipe builds the repozo script for non-zeo installations.
@@ -119,18 +211,11 @@ eggs = ${buildout:eggs}
 interpreter = zopepy
 scripts = zopepy
 
-
-[zeoserver_base]
-# Use this section to install and configure a Zope
-# Enterprise Objects server.
-# For options see http://pypi.python.org/pypi/plone.recipe.zeoserver
-#
-# If we try to start as root, Zope will switch to the user below
-# effective-user = ${buildout:effective-user}
-# Set storage
-var = ${buildout:var-dir}
-blob-storage = ${buildout:var-dir}/blobstorage
-# Put the log, pid and socket files in var/zeoserver
-zeo-log     = ${buildout:var-dir}/zeoserver/zeoserver.log
-pid-file    = ${buildout:var-dir}/zeoserver/zeoserver.pid
-socket-name = ${buildout:var-dir}/zeoserver/zeo.zdsock
+[precompiler]
+# This recipe is used in production installs to compile .py and .po files so
+# that the daemon doesn't try to do it.
+# For options see http://pypi.python.org/pypi/plone.recipe.precompiler
+recipe = plone.recipe.precompiler
+eggs = ${buildout:eggs}
+compile-mo-files = true
+extra-paths = ${buildout:directory}/products
