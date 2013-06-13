@@ -113,7 +113,7 @@ execute "buildout_#{node[:plone][:app_name]}_client" do
   command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
   user node[:plone][:user]
   action :nothing
-  # notifies :restart, "supervisor_service[zeoserver]", :immediately
+  notifies :restart, "service[#{node[:plone][:app_name]}_client]"
 end
 
 case node[:platform]
