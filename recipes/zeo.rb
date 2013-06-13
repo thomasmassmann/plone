@@ -20,6 +20,9 @@
 # Install dependencies, prepare common directories.
 include_recipe "plone::commons"
 
+# Install rsync, necessary for backup.
+include_recipe "rsync"
+
 # Add ZEO-Server directory.
 directory node[:plone][:zeo][:dir] do
   owner node[:plone][:user]

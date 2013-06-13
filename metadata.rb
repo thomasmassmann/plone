@@ -10,7 +10,7 @@ version          '0.1.0'
   supports os
 end
 
-%w{ nginx python }.each do |cb|
+%w{ nginx python rsync }.each do |cb|
   depends cb
 end
 
