@@ -138,3 +138,31 @@ cron "zeoserver-pack" do
   user node[:plone][:user]
   action node[:plone][:pack][:enabled] == true ? :create : :delete
 end
+
+case node[:platform]
+when "debian", "ubuntu"
+  template "/etc/init.d/#{node[:plone][:app_name]}_zeoserver" do
+    source "plone.init.erb"
+    owner "root"
+    group "root"
+    mode "755"
+    variables({
+      :home => node[:plone][:zeo][:dir],
+      :name => "#{node[:plone][:app_name]}_zeoserver"
+    })
+  end
+
+  template "/etc/default/#{node[:plone][:app_name]}_zeoserver" do
+    source "plone.default.erb"
+    owner "root"
+    group "root"
+    mode "644"
+    variables({
+      :name => "#{node[:plone][:app_name]}_zeoserver"
+    })
+  end
+
+  service "#{node[:plone][:app_name]}_zeoserver" do
+    action [:enable, :start]
+  end
+end
