@@ -16,6 +16,16 @@ extends =
     base.cfg
     http://dist.plone.org/release/<%= @version %>/versions.cfg
 
+
+###############################################################################
+# Download links for packages
+# -----------------------------------------------------------------------------
+# If you change your Plone version, you'll also need to update
+# the repository link below.
+find-links +=
+    http://dist.plone.org/release/<%= @version %>
+
+
 eggs =
 
 parts =
