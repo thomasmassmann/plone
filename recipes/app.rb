@@ -26,3 +26,22 @@ include_recipe "plone::commons"
     action :install
   end
 end
+
+# Add ZEO-Client directory.
+directory node[:plone][:app_home] do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+end
+
+# Add ZEO-Client buildout directories.
+%w{ eggs downloads extends-cache products }.each do |dir|
+  directory "#{node[:plone][:app_home]}/#{dir}" do
+    owner node[:plone][:user]
+    group node[:plone][:group]
+    mode 00755
+    action :create
+    recursive true
+  end
+end
