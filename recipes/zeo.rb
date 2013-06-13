@@ -70,6 +70,8 @@ template "#{node[:plone][:zeo][:dir]}/base.cfg" do
     :environment_vars => node[:plone][:environmen_vars],
     :extensions => node[:plone][:extensions],
     :find_links => node[:plone][:find_links],
+    :initial_password => node[:plone][:initial_password],
+    :initial_user => node[:plone][:initial_user],
     :newest => node[:plone][:newest],
     :prefer_final => node[:plone][:prefer_final],
     :unzip => node[:plone][:unzip],

@@ -65,6 +65,8 @@ default[:plone][:environmen_vars] = [
 ]
 default[:plone][:eggs] = []
 default[:plone][:zcml] = []
+default[:plone][:initial_user] = "admin"
+default[:plone][:initial_password] = "admin"
 # Backup settings.
 # default[:plone][:backups][:enabled] = true
 default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"

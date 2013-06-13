@@ -89,6 +89,19 @@ backups-dir=<%= @backups_dir %>
 
 
 ###############################################################################
+# Initial User
+# -----------------------------------------------------------------------------
+# This is the user id and password that will be used to create the initial
+# user id that will allow you to log in and create a Plone site. This only
+# sets the initial password; it will not allow you to change an already
+# existing password. If you change the admin password via the web interface,
+# the one below will no longer be valid.
+# If you find yourself locked out of your Zope/Python installation, you may
+# add an emergency user via "bin/plonectl adduser".
+user=<%= @initial_user %>:<%= @initial_password %>
+
+
+###############################################################################
 # Environment Variables
 # -----------------------------------------------------------------------------
 # Some of the behavior of your Zope/Plone instances are controlled with OS
