@@ -63,10 +63,13 @@ default[:plone][:environmen_vars] = [
     "#    TZ US/Eastern",
     "#    zope_i18n_allowed_languages en es de fr",
 ]
-default[:plone][:eggs] = []
-default[:plone][:zcml] = []
 default[:plone][:initial_user] = "admin"
 default[:plone][:initial_password] = "admin"
+default[:plone][:eggs] = [
+    "Pillow",
+]
+default[:plone][:zcml] = []
+
 # Backup settings.
 default[:plone][:backups][:enabled] = true
 default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"

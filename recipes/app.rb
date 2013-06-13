@@ -45,3 +45,60 @@ end
     recursive true
   end
 end
+
+# ZEO-Client buildout bootstrap.
+cookbook_file "#{node[:plone][:app_home]}/bootstrap.py" do
+  source "bootstrap.py"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+end
+
+# ZEO-Client buildout base.
+template "#{node[:plone][:app_home]}/base.cfg" do
+  source "base.cfg.erb"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  variables({
+    :backups_dir => node[:plone][:backups][:directory],
+    :environment_vars => node[:plone][:environmen_vars],
+    :extensions => node[:plone][:extensions],
+    :find_links => node[:plone][:find_links],
+    :initial_password => node[:plone][:initial_password],
+    :initial_user => node[:plone][:initial_user],
+    :newest => node[:plone][:newest],
+    :prefer_final => node[:plone][:prefer_final],
+    :unzip => node[:plone][:unzip],
+    :user => node[:plone][:user],
+  })
+  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
+end
+
+# ZEO-Client buildout configuration.
+template "#{node[:plone][:app_home]}/buildout.cfg" do
+  source "buildout_app.cfg.erb"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  variables({
+    :client_ip => "127.0.0.1",
+    :client_port => "8080",
+    :eggs => node[:plone][:eggs],
+    :version => node[:plone][:version],
+    :versions => node[:plone][:zeo][:versions],
+    :zcml => node[:plone][:zcml],
+    :zeo_ip => "127.0.0.1",
+    :zeo_port => node[:plone][:zeo][:port],
+  })
+  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
+end
+
+# Run ZEO-Client buildout.
+execute "buildout_#{node[:plone][:app_name]}_client" do
+  cwd node[:plone][:app_home]
+  command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
+  user node[:plone][:user]
+  action :nothing
+  # notifies :restart, "supervisor_service[zeoserver]", :immediately
+end
