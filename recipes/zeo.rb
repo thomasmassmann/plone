@@ -119,3 +119,22 @@ execute "buildout" do
   action :nothing
   # notifies :restart, "supervisor_service[zeoserver]", :immediately
 end
+
+# ZEO-Server daily backup.
+cron "zeoserver-backup" do
+  minute node[:plone][:backups][:minute]
+  hour node[:plone][:backups][:hour]
+  command "#{node[:plone][:zeo][:dir]}/bin/backup -q"
+  user node[:plone][:user]
+  action node[:plone][:backups][:enabled] == true ? :create : :delete
+end
+
+# ZEO-Server weekly database pack.
+cron "zeoserver-pack" do
+  minute node[:plone][:pack][:minute]
+  hour node[:plone][:pack][:hour]
+  weekday node[:plone][:pack][:weekday]
+  command "#{node[:plone][:zeo][:dir]}/bin/zeopack #{zeo_ip}:#{node[:plone][:zeo][:port]}"
+  user node[:plone][:user]
+  action node[:plone][:pack][:enabled] == true ? :create : :delete
+end

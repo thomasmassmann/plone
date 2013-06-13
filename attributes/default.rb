@@ -68,6 +68,13 @@ default[:plone][:zcml] = []
 default[:plone][:initial_user] = "admin"
 default[:plone][:initial_password] = "admin"
 # Backup settings.
-# default[:plone][:backups][:enabled] = true
+default[:plone][:backups][:enabled] = true
 default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"
+default[:plone][:backups][:minute] = "5"
+default[:plone][:backups][:hour] = "1"
 
+# Packing settings.
+default[:plone][:pack][:enabled] = true
+default[:plone][:pack][:minute] = "5"
+default[:plone][:pack][:hour] = "0"
+default[:plone][:pack][:weekday] = "1"
