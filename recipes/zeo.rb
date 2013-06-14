@@ -41,7 +41,7 @@ directory node[:plone][:backups][:directory] do
 end
 
 # Add ZEO-Server buildout directories.
-%w{ eggs downloads extends-cache }.each do |dir|
+%w{ eggs downloads }.each do |dir|
   directory "#{node[:plone][:zeo][:dir]}/#{dir}" do
     owner node[:plone][:user]
     group node[:plone][:group]
@@ -57,6 +57,49 @@ cookbook_file "#{node[:plone][:zeo][:dir]}/bootstrap.py" do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
+end
+
+versions_path = "#{node[:plone][:zeo][:dir]}/#{node[:plone][:version]}"
+
+# Add versions directory.
+directory versions_path do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+  recursive true
+end
+
+remote_file "#{versions_path}/versions.cfg" do
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/versions.cfg"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  not_if { ::File.exists?("#{versions_path}/versions.cfg") }
+end
+
+remote_file "#{versions_path}/zope-versions.cfg" do
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/zope-versions.cfg"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  not_if { ::File.exists?("#{versions_path}/zope-versions.cfg") }
+end
+
+remote_file "#{versions_path}/zopeapp-versions.cfg" do
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/zopeapp-versions.cfg"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  not_if { ::File.exists?("#{versions_path}/zopeapp-versions.cfg") }
+end
+
+remote_file "#{versions_path}/ztk-versions.cfg" do
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/ztk-versions.cfg"
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 0644
+  not_if { ::File.exists?("#{versions_path}/ztk-versions.cfg") }
 end
 
 # ZEO-Server buildout configuration.
