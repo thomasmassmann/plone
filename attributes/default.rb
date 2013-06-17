@@ -83,3 +83,6 @@ default[:plone][:pack][:enabled] = true
 default[:plone][:pack][:minute] = "5"
 default[:plone][:pack][:hour] = "0"
 default[:plone][:pack][:weekday] = "1"
+
+# Plone Hosting settings.
+default[:plone][:vhost_data_bag] = "plone_vhosts"
