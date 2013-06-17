@@ -67,9 +67,7 @@ default[:plone][:environmen_vars] = [
 ]
 default[:plone][:initial_user] = "admin"
 default[:plone][:initial_password] = "admin"
-default[:plone][:eggs] = [
-    "Pillow",
-]
+default[:plone][:eggs] = []
 default[:plone][:zcml] = []
 
 # Backup settings.
