@@ -157,6 +157,10 @@ end
 execute "buildout_#{node[:plone][:app_name]}_client" do
   cwd node[:plone][:app_home]
   command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
+  environment({
+    "HOME" => node[:plone][:home],
+    "USER" => node[:plone][:user]
+  })
   user node[:plone][:user]
   action :nothing
   notifies :restart, "service[#{node[:plone][:app_name]}_client]"
