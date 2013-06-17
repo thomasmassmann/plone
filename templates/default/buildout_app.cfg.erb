@@ -28,6 +28,17 @@ find-links +=
     http://dist.plone.org/release/<%= @version %>
 
 
+<% if @dev_packages_enabled %>
+###############################################################################
+# Extensions
+# -----------------------------------------------------------------------------
+# buildout.dumppickedversions notifies you of versions picked by buildout that
+# were not specifically pinned.
+# buildout.sanitycheck makes sure you're not running buildout as root.
+extensions += mr.developer
+<% end %>
+
+
 ###############################################################################
 # Parts Specification
 # -------------------
@@ -64,6 +75,25 @@ zcml =
     <% @zcml.each do |entry| -%>
     <%= entry %>
     <% end -%>
+
+
+<% if @dev_packages_enabled %>
+###############################################################################
+# mr.developer checkouts
+# -----------------------------------------------------------------------------
+auto-checkout                   = *
+sources-dir                     = src
+sources                         = sources
+
+
+###############################################################################
+# Development Packages
+# -----------------------------------------------------------------------------
+[sources]
+<% @dev_packages.each do |package| -%>
+<%= package %>
+<% end -%>
+<% end %>
 
 
 ###############################################################################

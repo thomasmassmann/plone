@@ -84,3 +84,7 @@ default[:plone][:pack][:weekday] = "1"
 
 # Plone Hosting settings.
 default[:plone][:vhost_data_bag] = "plone_vhosts"
+
+# Development packages.
+default[:plone][:dev][:enabled] = false
+default[:plone][:dev][:sources] = []

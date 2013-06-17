@@ -142,6 +142,8 @@ template "#{node[:plone][:app_home]}/buildout.cfg" do
   variables({
     :client_ip => node[:cloud][:local_ipv4] || node[:ipaddress],
     :client_port => node[:plone][:port],
+    :dev_packages => node[:plone][:dev][:sources],
+    :dev_packages_enabled => node[:plone][:dev][:enabled],
     :eggs => node[:plone][:eggs],
     :version => node[:plone][:version],
     :versions => node[:plone][:zeo][:versions],
