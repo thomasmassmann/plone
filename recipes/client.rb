@@ -143,7 +143,7 @@ template "#{client_dir}/buildout.cfg" do
   mode 0644
   variables({
     :client_ip => node[:cloud][:local_ipv4] || node[:ipaddress],
-    :client_port => node[:plone][:client][:port_base],
+    :client_port => node[:plone][:client][:port_base].to_i,
     :clients => node[:plone][:client][:count],
     :dev_packages => node[:plone][:client][:dev][:sources],
     :dev_packages_enabled => node[:plone][:client][:dev][:enabled],
