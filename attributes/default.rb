@@ -54,6 +54,7 @@ default[:plone][:find_links] = [
     "http://download.zope.org/distribution/",
     "http://effbot.org/downloads",
 ]
+default[:plone][:extends] = []
 default[:plone][:extensions] = [
     "buildout.dumppickedversions",
     "buildout.sanitycheck",

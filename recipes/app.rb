@@ -145,6 +145,7 @@ template "#{node[:plone][:app_home]}/buildout.cfg" do
     :dev_packages => node[:plone][:dev][:sources],
     :dev_packages_enabled => node[:plone][:dev][:enabled],
     :eggs => node[:plone][:eggs],
+    :extends => node[:plone][:extends],
     :version => node[:plone][:version],
     :versions => node[:plone][:zeo][:versions],
     :zcml => node[:plone][:zcml],
