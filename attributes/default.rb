@@ -23,21 +23,6 @@ default[:plone][:user] = "plone"
 default[:plone][:group] = "plone"
 default[:plone][:home] = "/home/#{node[:plone][:user]}"
 
-# ZEO Server settings.
-default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
-default[:plone][:zeo][:custom_ip] = nil
-default[:plone][:zeo][:port] = "8100"
-default[:plone][:zeo][:versions] = [
-    "Cheetah = 2.2.1",
-    "Products.DocFinderTab = 1.0.5",
-    "ZopeSkel = 2.21.2",
-    "collective.recipe.backup = 2.10",
-    "plone.recipe.unifiedinstaller = 4.3.1",
-    "plone.recipe.command = 1.1",
-    "plone.recipe.precompiler = 0.6",
-    "zopeskel.dexterity = 1.5.0",
-    "zopeskel.diazotheme = 1.0",
-]
 default[:plone][:zeo][:role] = "plone_zeo"
 
 # Plone settings.
