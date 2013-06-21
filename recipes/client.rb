@@ -21,6 +21,8 @@
 # Install dependencies, prepare common directories.
 include_recipe "plone::commons"
 
+client_dir = node[:plone][:client][:dir]
+
 # Install additional packages.
 %w{ libjpeg-dev libxslt-dev }.each do |pkg|
   package pkg do
@@ -29,7 +31,7 @@ include_recipe "plone::commons"
 end
 
 # Add ZEO-Client directory.
-directory node[:plone][:app_home] do
+directory client_dir do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 00755
@@ -38,7 +40,7 @@ end
 
 # Add ZEO-Client buildout directories.
 %w{ eggs downloads products }.each do |dir|
-  directory "#{node[:plone][:app_home]}/#{dir}" do
+  directory "#{client_dir}/#{dir}" do
     owner node[:plone][:user]
     group node[:plone][:group]
     mode 00755
@@ -48,14 +50,14 @@ end
 end
 
 # ZEO-Client buildout bootstrap.
-cookbook_file "#{node[:plone][:app_home]}/bootstrap.py" do
+cookbook_file "#{client_dir}/bootstrap.py" do
   source "bootstrap.py"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
 end
 
-versions_path = "#{node[:plone][:app_home]}/#{node[:plone][:version]}"
+versions_path = "#{client_dir}/#{node[:plone][:version]}"
 
 # Add versions directory.
 directory versions_path do
@@ -99,14 +101,14 @@ remote_file "#{versions_path}/ztk-versions.cfg" do
 end
 
 # ZEO-Client buildout base.
-template "#{node[:plone][:app_home]}/base.cfg" do
+template "#{client_dir}/base.cfg" do
   source "base.cfg.erb"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
   variables({
     :backups_dir => node[:plone][:backups][:directory],
-    :environment_vars => node[:plone][:environmen_vars],
+    :environment_vars => node[:plone][:environment_vars],
     :extensions => node[:plone][:extensions],
     :find_links => node[:plone][:find_links],
     :initial_password => node[:plone][:initial_password],
@@ -116,7 +118,7 @@ template "#{node[:plone][:app_home]}/base.cfg" do
     :unzip => node[:plone][:unzip],
     :user => node[:plone][:user],
   })
-  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
+  notifies :run, "execute[buildout_plone_client]"
 end
 
 # Search for ZEO Servers.
@@ -125,7 +127,7 @@ if Chef::Config[:solo]
   zeo_servers = Array.new
   zeo_servers << node
 else
-  zeo_servers = search(:node, "role:#{node[:plone][:zeo][:role]} AND chef_environment:#{node.chef_environment}") || []
+  zeo_servers = search(:node, "role:#{node[:plone][:client][:zeo_role]} AND chef_environment:#{node.chef_environment}") || []
   if zeo_servers.empty?
     Chef::Log.info("No nodes returned from search, using this node so buildout.cfg has data.")
     zeo_servers = Array.new
@@ -134,63 +136,63 @@ else
 end
 
 # ZEO-Client buildout configuration.
-template "#{node[:plone][:app_home]}/buildout.cfg" do
+template "#{client_dir}/buildout.cfg" do
   source "buildout_app.cfg.erb"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
   variables({
     :client_ip => node[:cloud][:local_ipv4] || node[:ipaddress],
-    :client_port => node[:plone][:port],
-    :dev_packages => node[:plone][:dev][:sources],
-    :dev_packages_enabled => node[:plone][:dev][:enabled],
-    :eggs => node[:plone][:eggs],
-    :extends => node[:plone][:extends],
+    :client_port => node[:plone][:client][:port_base],
+    :dev_packages => node[:plone][:client][:dev][:sources],
+    :dev_packages_enabled => node[:plone][:client][:dev][:enabled],
+    :eggs => node[:plone][:client][:eggs],
+    :extends => node[:plone][:client][:extends],
     :version => node[:plone][:version],
     :versions => node[:plone][:zeo][:versions],
-    :zcml => node[:plone][:zcml],
+    :zcml => node[:plone][:client][:zcml],
     :zeo_servers => zeo_servers.uniq,
   })
-  notifies :run, "execute[buildout_#{node[:plone][:app_name]}_client]"
+  notifies :run, "execute[buildout_plone_client]"
 end
 
 # Run ZEO-Client buildout.
-execute "buildout_#{node[:plone][:app_name]}_client" do
-  cwd node[:plone][:app_home]
-  command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout"
+execute "buildout_plone_client" do
+  cwd client_dir
+  command "#{node[:plone][:home]}/venv/bin/python bootstrap.py && ./bin/buildout > buildout.txt"
   environment({
     "HOME" => node[:plone][:home],
     "USER" => node[:plone][:user]
   })
   user node[:plone][:user]
   action :nothing
-  notifies :restart, "service[#{node[:plone][:app_name]}_client]"
+  notifies :restart, "service[plone_client]"
 end
 
 case node[:platform]
 when "debian", "ubuntu"
-  template "/etc/init.d/#{node[:plone][:app_name]}_client" do
+  template "/etc/init.d/plone_client" do
     source "plone.init.erb"
     owner "root"
     group "root"
     mode "755"
     variables({
-      :home => node[:plone][:app_home],
-      :name => "#{node[:plone][:app_name]}_client"
+      :home => client_dir,
+      :name => "plone_client"
     })
   end
 
-  template "/etc/default/#{node[:plone][:app_name]}_client" do
+  template "/etc/default/plone_client" do
     source "plone.default.erb"
     owner "root"
     group "root"
     mode "644"
     variables({
-      :name => "#{node[:plone][:app_name]}_client"
+      :name => "plone_client"
     })
   end
 
-  service "#{node[:plone][:app_name]}_client" do
+  service "plone_client" do
     action [:enable, :start]
   end
 end

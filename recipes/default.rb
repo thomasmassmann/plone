@@ -19,4 +19,4 @@
 #
 
 include_recipe "plone::zeo"
-include_recipe "plone::app"
+include_recipe "plone::client"
