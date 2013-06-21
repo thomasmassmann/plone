@@ -144,6 +144,7 @@ template "#{client_dir}/buildout.cfg" do
   variables({
     :client_ip => node[:cloud][:local_ipv4] || node[:ipaddress],
     :client_port => node[:plone][:client][:port_base],
+    :clients => node[:plone][:client][:count],
     :dev_packages => node[:plone][:client][:dev][:sources],
     :dev_packages_enabled => node[:plone][:client][:dev][:enabled],
     :eggs => node[:plone][:client][:eggs],

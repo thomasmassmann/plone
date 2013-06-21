@@ -19,6 +19,7 @@
 #
 
 # Default settings for the Plone ZEO-Clients.
+default[:plone][:client][:count] = 1
 default[:plone][:client][:dir] = "/home/plone/Plone"
 default[:plone][:client][:eggs] = []
 default[:plone][:client][:extends] = []
