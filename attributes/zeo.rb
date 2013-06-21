@@ -19,7 +19,7 @@
 #
 
 # Default settings for the Plone ZEO-Server.
-default[:plone][:zeo][:dir] = "#{node[:plone][:home]}/zeo"
+default[:plone][:zeo][:dir] = "/home/plone/zeoserver"
 default[:plone][:zeo][:custom_ip] = nil
 default[:plone][:zeo][:port] = "8100"
 default[:plone][:zeo][:versions] = [
