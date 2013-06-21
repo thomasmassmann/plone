@@ -21,44 +21,36 @@
 # General settings.
 default[:plone][:user] = "plone"
 default[:plone][:group] = "plone"
-default[:plone][:home] = "/home/#{node[:plone][:user]}"
+default[:plone][:home] = "/home/plone"
 
-default[:plone][:zeo][:role] = "plone_zeo"
-
-# Plone settings.
-default[:plone][:port] = "8080"
-default[:plone][:app_name] = "Plone"
-default[:plone][:app_home] = "#{node[:plone][:home]}/#{node[:plone][:app_name]}"
-default[:plone][:version] = "4.3"
-default[:plone][:newest] = false
-default[:plone][:prefer_final] = true
-default[:plone][:unzip] = true
-default[:plone][:find_links] = [
-    "http://dist.plone.org",
-    "http://download.zope.org/ppix/",
-    "http://download.zope.org/distribution/",
-    "http://effbot.org/downloads",
-]
-default[:plone][:extends] = []
-default[:plone][:extensions] = [
-    "buildout.dumppickedversions",
-    "buildout.sanitycheck",
-]
-default[:plone][:environmen_vars] = [
+# Basic buildout settings used by client and server.
+default[:plone][:environment_vars] = [
     "zope_i18n_compile_mo_files true",
     "PYTHON_EGG_CACHE ${buildout:directory}/var/.python-eggs",
     "PYTHONHASHSEED random",
     "#    TZ US/Eastern",
     "#    zope_i18n_allowed_languages en es de fr",
 ]
-default[:plone][:initial_user] = "admin"
+default[:plone][:extensions] = [
+    "buildout.dumppickedversions",
+    "buildout.sanitycheck",
+]
+default[:plone][:find_links] = [
+    "http://dist.plone.org",
+    "http://download.zope.org/ppix/",
+    "http://download.zope.org/distribution/",
+    "http://effbot.org/downloads",
+]
 default[:plone][:initial_password] = "admin"
-default[:plone][:eggs] = []
-default[:plone][:zcml] = []
+default[:plone][:initial_user] = "admin"
+default[:plone][:newest] = false
+default[:plone][:prefer_final] = true
+default[:plone][:unzip] = true
+default[:plone][:version] = "4.3"
 
 # Backup settings.
 default[:plone][:backups][:enabled] = true
-default[:plone][:backups][:directory] = "/var/backups/#{node[:plone][:app_name]}"
+default[:plone][:backups][:directory] = "/var/backups/Plone"
 default[:plone][:backups][:minute] = "5"
 default[:plone][:backups][:hour] = "1"
 
@@ -70,7 +62,3 @@ default[:plone][:pack][:weekday] = "1"
 
 # Plone Hosting settings.
 default[:plone][:vhost_data_bag] = "plone_vhosts"
-
-# Development packages.
-default[:plone][:dev][:enabled] = false
-default[:plone][:dev][:sources] = []
