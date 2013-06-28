@@ -22,6 +22,8 @@
 include_recipe "plone::commons"
 
 client_dir = node[:plone][:client][:dir]
+plone_version = node[:plone][:version]
+versions_path = "#{client_dir}/#{plone_version}"
 
 # Install additional packages.
 %w{ libjpeg-dev libxslt-dev }.each do |pkg|
@@ -38,9 +40,24 @@ directory client_dir do
   action :create
 end
 
+directory "#{client_dir}/products" do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+end
+
+directory "#{versions_path}/buildout-cache" do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00755
+  action :create
+  recursive true
+end
+
 # Add ZEO-Client buildout directories.
-%w{ eggs downloads products }.each do |dir|
-  directory "#{client_dir}/#{dir}" do
+%w{ eggs downloads }.each do |dir|
+  directory "#{versions_path}/buildout-cache/#{dir}" do
     owner node[:plone][:user]
     group node[:plone][:group]
     mode 00755
@@ -57,8 +74,6 @@ cookbook_file "#{client_dir}/bootstrap.py" do
   mode 0644
 end
 
-versions_path = "#{client_dir}/#{node[:plone][:version]}"
-
 # Add versions directory.
 directory versions_path do
   owner node[:plone][:user]
@@ -69,7 +84,7 @@ directory versions_path do
 end
 
 remote_file "#{versions_path}/versions.cfg" do
-  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/versions.cfg"
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{plone_version}/base_skeleton/versions.cfg"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
@@ -77,7 +92,7 @@ remote_file "#{versions_path}/versions.cfg" do
 end
 
 remote_file "#{versions_path}/zope-versions.cfg" do
-  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/zope-versions.cfg"
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{plone_version}/base_skeleton/zope-versions.cfg"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
@@ -85,7 +100,7 @@ remote_file "#{versions_path}/zope-versions.cfg" do
 end
 
 remote_file "#{versions_path}/zopeapp-versions.cfg" do
-  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/zopeapp-versions.cfg"
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{plone_version}/base_skeleton/zopeapp-versions.cfg"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
@@ -93,7 +108,7 @@ remote_file "#{versions_path}/zopeapp-versions.cfg" do
 end
 
 remote_file "#{versions_path}/ztk-versions.cfg" do
-  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{node[:plone][:version]}/base_skeleton/ztk-versions.cfg"
+  source "https://raw.github.com/plone/Installers-UnifiedInstaller/#{plone_version}/base_skeleton/ztk-versions.cfg"
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
@@ -149,7 +164,7 @@ template "#{client_dir}/buildout.cfg" do
     :dev_packages_enabled => node[:plone][:client][:dev][:enabled],
     :eggs => node[:plone][:client][:eggs],
     :extends => node[:plone][:client][:extends],
-    :version => node[:plone][:version],
+    :version => plone_version,
     :versions => node[:plone][:zeo][:versions],
     :zcml => node[:plone][:client][:zcml],
     :zeo_servers => zeo_servers.uniq,
