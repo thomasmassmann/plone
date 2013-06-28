@@ -115,6 +115,27 @@ remote_file "#{versions_path}/ztk-versions.cfg" do
   action :create_if_missing
 end
 
+remote_file "#{versions_path}/Plone-#{plone_version}-UnifiedInstaller.tgz" do
+  owner node[:plone][:user]
+  group node[:plone][:group]
+  mode 00644
+  source "https://launchpad.net/plone/#{plone_version[0..2]}/#{plone_version}/+download/Plone-#{plone_version}-UnifiedInstaller.tgz"
+  action :create_if_missing
+end
+
+# Unpack Unified Installer data.
+bash "buildout_plone_client_preflight" do
+  user node[:plone][:user]
+  cwd versions_path
+  code <<-EOH
+    tar xzf #{versions_path}/Plone-#{plone_version}-UnifiedInstaller.tgz -C #{versions_path}
+    tar jxvf #{versions_path}/Plone-#{plone_version}-UnifiedInstaller/packages/buildout-cache.tar.bz2 -C #{versions_path}
+    touch #{versions_path}/buildout-cache.extracted
+    EOH
+  not_if { ::File.exists?("#{versions_path}/buildout-cache.extracted") }
+end
+
+
 # ZEO-Client buildout base.
 template "#{client_dir}/base.cfg" do
   source "base.cfg.erb"
