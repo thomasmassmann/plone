@@ -11,3 +11,5 @@ script:
 branches:
   only:
     - master
+notifications:
+  irc: irc.freenode.org#propertyshelf
