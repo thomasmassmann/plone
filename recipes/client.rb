@@ -88,7 +88,7 @@ remote_file "#{versions_path}/versions.cfg" do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
-  not_if { ::File.exists?("#{versions_path}/versions.cfg") }
+  action :create_if_missing
 end
 
 remote_file "#{versions_path}/zope-versions.cfg" do
@@ -96,7 +96,7 @@ remote_file "#{versions_path}/zope-versions.cfg" do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
-  not_if { ::File.exists?("#{versions_path}/zope-versions.cfg") }
+  action :create_if_missing
 end
 
 remote_file "#{versions_path}/zopeapp-versions.cfg" do
@@ -104,7 +104,7 @@ remote_file "#{versions_path}/zopeapp-versions.cfg" do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
-  not_if { ::File.exists?("#{versions_path}/zopeapp-versions.cfg") }
+  action :create_if_missing
 end
 
 remote_file "#{versions_path}/ztk-versions.cfg" do
@@ -112,7 +112,7 @@ remote_file "#{versions_path}/ztk-versions.cfg" do
   owner node[:plone][:user]
   group node[:plone][:group]
   mode 0644
-  not_if { ::File.exists?("#{versions_path}/ztk-versions.cfg") }
+  action :create_if_missing
 end
 
 # ZEO-Client buildout base.
