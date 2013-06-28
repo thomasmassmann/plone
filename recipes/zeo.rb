@@ -129,7 +129,7 @@ when "debian", "ubuntu"
   end
 
   service "plone_zeoserver" do
-    action [:enable]
+    action :nothing
   end
 end
 
