@@ -21,10 +21,9 @@
 # Install and configure python, python-dev, pip and virtualenv.
 include_recipe "python::default"
 
-if platform?("ubuntu")
-  package "python-dev" do
-    action :install
-  end
+package "python-dev" do
+  action :install
+  only_if { platform?("ubuntu") }
 end
 
 # This package is currently necessary for the user resource (password functions).
