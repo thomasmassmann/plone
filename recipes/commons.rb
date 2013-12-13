@@ -21,6 +21,12 @@
 # Install and configure python, python-dev, pip and virtualenv.
 include_recipe "python::default"
 
+if platform?("ubuntu")
+  package "python-dev" do
+    action :install
+  end
+end
+
 # This package is currently necessary for the user resource (password functions).
 package "libshadow-ruby1.8" do
   action :install
