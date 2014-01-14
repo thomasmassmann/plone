@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem 'rake'
-gem 'foodcritic'
+gem 'foodcritic', '~> 0.3.0'
 gem 'moneta', '~> 0.6.0'
 gem 'chef', '~> 10.16.2'
 gem 'chefspec', '~> 0.9.0'
