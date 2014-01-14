@@ -15,3 +15,9 @@ server {
         proxy_pass http://<%= @vhost.backend_ip %>:<%= @vhost.backend_port %>/VirtualHostBase/http/<%= @vhost.domain_name %>:80/<%= @vhost.plone_site %>/VirtualHostRoot/;
     }
 }
+
+# Redirect all not defined subdomains to the top level domain.
+server {
+    server_name *.<%= @vhost.domain_name %>;
+    rewrite (^/.*) http://<%= @vhost.domain_name %>$request_uri$is_args$args;
+}
