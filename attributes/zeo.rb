@@ -32,4 +32,5 @@ default[:plone][:zeo][:versions] = [
     "plone.recipe.precompiler = 0.6",
     "zopeskel.dexterity = 1.5.0",
     "zopeskel.diazotheme = 1.0",
+    "zope.configuration = 3.8.0",
 ]
