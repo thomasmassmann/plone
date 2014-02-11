@@ -27,6 +27,7 @@ end
 
 attribute :domain_name, :kind_of => String, :name_attribute => true
 attribute :plone_site, :kind_of => String, :default => "Plone"
+attribute :redirect, :kind_of => String, :default => nil
 attribute :backend_ip, :kind_of => String, :default => "127.0.0.1"
 attribute :backend_port, :kind_of => String, :default => "8080"
 attribute :template, :kind_of => String, :default => "nginx_plone.conf.erb"

@@ -9,11 +9,16 @@ server {
 server {
     listen 80;
     server_name  <%= @vhost.domain_name %>;
+
+    <% if @vhost.redirect %>
+    rewrite (^/.*) <%= @vhost.redirect %>$1 permanent;
+    <% elsif @vhost.plone_site %>
     access_log  <%= node['nginx']['log_dir'] %>/<%= @vhost.domain_name %>.access.log;
 
     location / {
         proxy_pass http://<%= @vhost.backend_ip %>:<%= @vhost.backend_port %>/VirtualHostBase/http/<%= @vhost.domain_name %>:80/<%= @vhost.plone_site %>/VirtualHostRoot/;
     }
+    <% end %>
 }
 
 # Redirect all not defined subdomains to the top level domain.

@@ -46,5 +46,6 @@ vhosts.each do |vhost|
   plone_vhost vhost[:domain] do
     plone_site vhost[:site]
     backend_ip node[:cloud][:local_ipv4] || node[:ipaddress]
+    redirect vhost[:redirect] || nil
   end
 end
