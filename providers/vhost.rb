@@ -28,6 +28,7 @@ action :enable do
     group "root"
     mode "644"
     variables :vhost => new_resource
+    notifies :reload, 'service[nginx]'
   end
 
   nginx_site "#{new_resource.domain_name}.conf" do
@@ -51,6 +52,7 @@ action :remove do
   disable_config
   file "#{node[:nginx][:dir]}/sites-available/#{new_resource.domain_name}.conf" do
     action :delete
+    notifies :reload, 'service[nginx]'
   end
 
   new_resource.updated_by_last_action(true)
@@ -59,5 +61,6 @@ end
 def disable_config
   nginx_site "#{new_resource.domain_name}.conf" do
     enable false
+    notifies :reload, 'service[nginx]'
   end
 end
