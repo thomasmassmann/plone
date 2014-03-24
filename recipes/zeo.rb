@@ -141,6 +141,8 @@ template "#{zeo_dir}/base.cfg" do
   mode 0644
   variables({
     :backups_dir => node[:plone][:backups][:directory],
+    :backups_keep => node[:plone][:backups][:keep],
+    :backups_keep_blob_days => node[:plone][:backups][:keep_blob_days],
     :environment_vars => node[:plone][:environment_vars],
     :extensions => node[:plone][:extensions],
     :find_links => node[:plone][:find_links],

@@ -53,6 +53,8 @@ default[:plone][:backups][:enabled] = true
 default[:plone][:backups][:directory] = "/var/backups/Plone"
 default[:plone][:backups][:minute] = "5"
 default[:plone][:backups][:hour] = "1"
+default[:plone][:backups][:keep] = "2"
+default[:plone][:backups][:keep_blob_days] = "14"
 
 # Packing settings.
 default[:plone][:pack][:enabled] = true
