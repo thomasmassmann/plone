@@ -29,3 +29,4 @@ default[:plone][:client][:zeo_role] = "plone_zeo"
 # Development packages.
 default[:plone][:client][:dev][:enabled] = false
 default[:plone][:client][:dev][:sources] = []
+default[:plone][:client][:versions] = []

@@ -188,7 +188,7 @@ template "#{client_dir}/buildout.cfg" do
     :eggs => node[:plone][:client][:eggs],
     :extends => node[:plone][:client][:extends],
     :version => plone_version,
-    :versions => node[:plone][:zeo][:versions],
+    :versions => node[:plone][:client][:versions],
     :zcml => node[:plone][:client][:zcml],
     :zeo_servers => zeo_servers.uniq,
   })
