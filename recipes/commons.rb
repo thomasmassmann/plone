@@ -29,6 +29,12 @@ end
 # This package is currently necessary for the user resource (password functions).
 package "libshadow-ruby1.8" do
   action :install
+  only_if { platform?("debian") }
+end
+
+package "ruby-shadow" do
+  action :install
+  only_if { platform?("ubuntu") }
 end
 
 # Add Plone group.
