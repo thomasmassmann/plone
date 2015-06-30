@@ -32,6 +32,7 @@ package "libshadow-ruby1.8" do
   only_if { platform?("debian") }
 end
 
+# ruby-shadow replaces libshadow-ruby1.8 for newer versions of both Debian and Ubuntu
 package "ruby-shadow" do
   action :install
   only_if { platform?("ubuntu") }
