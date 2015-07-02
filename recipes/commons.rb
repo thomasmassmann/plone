@@ -57,6 +57,5 @@ end
 python_virtualenv "#{node[:plone][:home]}/venv" do
   owner node[:plone][:user]
   group node[:plone][:group]
-  interpreter "python2.7"
   action :create
 end
