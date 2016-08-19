@@ -317,6 +317,9 @@ datafs = ${buildout:var-dir}/filestorage/Data.fs
 blob-storage = ${buildout:var-dir}/blobstorage
 keep = <%= @backups_keep %>
 keep_blob_days = <%= @backups_keep_blob_days %>
+enable_zipbackup = true
+blobziplocation = ${buildout:backups-dir}/blobstoragezips
+ziplocation = ${buildout:backups-dir}/zipbackups
 
 
 ###############################################################################
